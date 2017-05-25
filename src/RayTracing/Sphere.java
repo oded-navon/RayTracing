@@ -3,22 +3,22 @@ package RayTracing;
 
 public class Sphere
 {
-    private int[] center;
-    private int radius;
+    private float[] center;
+    private float radius;
     private int materialIndex;
 
-    public Sphere(int[] center, int radius, int materialIndex)
+    public Sphere(float[] center, float radius, int materialIndex)
     {
         this.center = center;
         this.radius = radius;
         this.materialIndex = materialIndex;
     }
 
-    public int[] getCenter() {
+    public float[] getCenter() {
         return center;
     }
 
-    public int getRadius() {
+    public float getRadius() {
         return radius;
     }
 

@@ -3,21 +3,21 @@ package RayTracing;
 
 public class Camera
 {
-    private int[] Position;
-    private int[] LookAtPosition;
-    private int[] UpVector;
+    private float[] Position;
+    private float[] LookAtPosition;
+    private float[] UpVector;
     private float ScreenDistance;
     private float ScreenWidth;
 
-    public int[] getPosition() {
+    public float[] getPosition() {
         return Position;
     }
 
-    public int[] getLookAtPosition() {
+    public float[] getLookAtPosition() {
         return LookAtPosition;
     }
 
-    public int[] getUpVector() {
+    public float[] getUpVector() {
         return UpVector;
     }
 
@@ -29,7 +29,7 @@ public class Camera
         return ScreenWidth;
     }
 
-    public Camera(int[] position, int[] lookAtPosition, int[] upVector, float screenDistance, float screenWidth) {
+    public Camera(float[] position, float[] lookAtPosition, float[] upVector, float screenDistance, float screenWidth) {
 
         Position = position;
         LookAtPosition = lookAtPosition;

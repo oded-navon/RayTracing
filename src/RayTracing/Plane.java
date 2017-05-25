@@ -3,15 +3,15 @@ package RayTracing;
 
 public class Plane
 {
-    private int[] normal;
-    private int offset;
+    private float[] normal;
+    private float offset;
     private int materialIndex;
 
-    public int[] getNormal() {
+    public float[] getNormal() {
         return normal;
     }
 
-    public int getOffset() {
+    public float getOffset() {
         return offset;
     }
 
@@ -19,7 +19,7 @@ public class Plane
         return materialIndex;
     }
 
-    public Plane(int[] normal, int offset, int materialIndex) {
+    public Plane(float[] normal, float offset, int materialIndex) {
         this.normal = normal;
 
         this.offset = offset;

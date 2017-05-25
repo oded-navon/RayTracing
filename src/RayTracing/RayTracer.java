@@ -18,9 +18,6 @@ public class RayTracer {
 
 	public int imageWidth;
 	public int imageHeight;
-	public RayTracing.Material sceneMaterial;
-	public Light sceneLight;
-	public Plane scenePlane;
 
 
 	/**
@@ -95,9 +92,9 @@ public class RayTracer {
 
 				if (code.equals("cam"))
 				{
-					int pos[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int lookAtPos[] = {Integer.parseInt(params[3]),Integer.parseInt(params[4]),Integer.parseInt(params[5])};
-					int upVector[] = {Integer.parseInt(params[6]),Integer.parseInt(params[7]),Integer.parseInt(params[8])};
+					float pos[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float lookAtPos[] = {Float.parseFloat(params[3]),Float.parseFloat(params[4]),Float.parseFloat(params[5])};
+					float upVector[] = {Float.parseFloat(params[6]),Float.parseFloat(params[7]),Float.parseFloat(params[8])};
 					float screenDist = Float.parseFloat(params[9]);
 					float screenWidth = Float.parseFloat(params[10]);
 					scene.Camera = new Camera(pos,lookAtPos,upVector,screenDist,screenWidth);
@@ -106,7 +103,7 @@ public class RayTracer {
 				}
 				else if (code.equals("set"))
 				{
-					int backColor[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
+					float backColor[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
 					int shadowRays = Integer.parseInt(params[3]);
 					int maxRecNum = Integer.parseInt(params[4]);
 					int superSmapLev = Integer.parseInt(params[5]);
@@ -116,9 +113,9 @@ public class RayTracer {
 				}
 				else if (code.equals("mtl"))
 				{
-					int diffCol[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int specCol[] = {Integer.parseInt(params[3]),Integer.parseInt(params[4]),Integer.parseInt(params[5])};
-					int refCol[] = {Integer.parseInt(params[6]),Integer.parseInt(params[7]),Integer.parseInt(params[8])};
+					float diffCol[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float specCol[] = {Float.parseFloat(params[3]),Float.parseFloat(params[4]),Float.parseFloat(params[5])};
+					float refCol[] = {Float.parseFloat(params[6]),Float.parseFloat(params[7]),Float.parseFloat(params[8])};
 					float phongSpec = Float.parseFloat(params[9]);
 					float trans = Float.parseFloat(params[10]);
 					RayTracing.Material sceneMat = new RayTracing.Material(diffCol,specCol,refCol,phongSpec,trans);
@@ -128,8 +125,8 @@ public class RayTracer {
 				}
 				else if (code.equals("sph"))
 				{
-					int center[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int radius = Integer.parseInt(params[3]);
+					float center[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float radius = Float.parseFloat(params[3]);
 					int matIndex = Integer.parseInt(params[4]);
 
 					Sphere sceneSphere = new Sphere(center,radius,matIndex);
@@ -139,8 +136,8 @@ public class RayTracer {
 				}
 				else if (code.equals("pln"))
 				{
-					int normal[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int offset = Integer.parseInt(params[3]);
+					float normal[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float offset = Float.parseFloat(params[3]);
 					int planeMatIndex = Integer.parseInt(params[4]);
 
 					Plane scenePlane = new Plane(normal,offset,planeMatIndex);
@@ -150,9 +147,9 @@ public class RayTracer {
 				}
 				else if (code.equals("trg"))
 				{
-					int ver1[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int ver2[] = {Integer.parseInt(params[3]),Integer.parseInt(params[4]),Integer.parseInt(params[5])};
-					int ver3[] = {Integer.parseInt(params[6]),Integer.parseInt(params[7]),Integer.parseInt(params[8])};
+					float ver1[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float ver2[] = {Float.parseFloat(params[3]),Float.parseFloat(params[4]),Float.parseFloat(params[5])};
+					float ver3[] = {Float.parseFloat(params[6]),Float.parseFloat(params[7]),Float.parseFloat(params[8])};
 					int trigMatIndex = Integer.parseInt(params[9]);
 
 					Triangle sceneTrig = new Triangle(ver1,ver2,ver3,trigMatIndex);
@@ -162,8 +159,8 @@ public class RayTracer {
 				}
 				else if (code.equals("lgt"))
 				{
-					int lightPos[] = {Integer.parseInt(params[0]),Integer.parseInt(params[1]),Integer.parseInt(params[2])};
-					int lightRgb[] = {Integer.parseInt(params[3]),Integer.parseInt(params[4]),Integer.parseInt(params[5])};
+					float lightPos[] = {Float.parseFloat(params[0]),Float.parseFloat(params[1]),Float.parseFloat(params[2])};
+					float lightRgb[] = {Float.parseFloat(params[3]),Float.parseFloat(params[4]),Float.parseFloat(params[5])};
 					float specIntensity = Float.parseFloat(params[6]);
 					float shadIntensity = Float.parseFloat(params[7]);
 					float lightRadius = Float.parseFloat(params[8]);
