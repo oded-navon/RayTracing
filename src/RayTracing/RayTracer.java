@@ -1,8 +1,5 @@
 package RayTracing;
 
-import com.company.*;
-import com.sun.javafx.sg.prism.NGPhongMaterial;
-import javafx.scene.paint.Material;
 
 import java.awt.Transparency;
 import java.awt.color.*;
@@ -11,8 +8,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +18,7 @@ public class RayTracer {
 
 	public int imageWidth;
 	public int imageHeight;
-	public com.company.Material sceneMaterial;
+	public RayTracing.Material sceneMaterial;
 	public Light sceneLight;
 	public Plane scenePlane;
 
@@ -126,7 +121,7 @@ public class RayTracer {
 					int refCol[] = {Integer.parseInt(params[6]),Integer.parseInt(params[7]),Integer.parseInt(params[8])};
 					float phongSpec = Float.parseFloat(params[9]);
 					float trans = Float.parseFloat(params[10]);
-					com.company.Material sceneMat = new com.company.Material(diffCol,specCol,refCol,phongSpec,trans);
+					RayTracing.Material sceneMat = new RayTracing.Material(diffCol,specCol,refCol,phongSpec,trans);
 					scene.Materials.add(sceneMat);
 
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
@@ -137,7 +132,7 @@ public class RayTracer {
 					int radius = Integer.parseInt(params[3]);
 					int matIndex = Integer.parseInt(params[4]);
 
-					com.company.Sphere sceneSphere = new com.company.Sphere(center,radius,matIndex);
+					Sphere sceneSphere = new Sphere(center,radius,matIndex);
 					scene.Spheres.add(sceneSphere);
 
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
@@ -148,7 +143,7 @@ public class RayTracer {
 					int offset = Integer.parseInt(params[3]);
 					int planeMatIndex = Integer.parseInt(params[4]);
 
-					com.company.Plane scenePlane = new com.company.Plane(normal,offset,planeMatIndex);
+					Plane scenePlane = new Plane(normal,offset,planeMatIndex);
 					scene.Planes.add(scenePlane);
 
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));

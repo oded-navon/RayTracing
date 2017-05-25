@@ -1,4 +1,4 @@
-package com.company;
+package RayTracing;
 
 
 public class Camera
