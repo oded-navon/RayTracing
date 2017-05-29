@@ -58,6 +58,8 @@ public class Sphere implements Shape
 
     @Override
     public Vector3D getNormal(Ray ray, double distance) {
-        return null;
+        return ray.getIntersection(distance)
+                .subtract(getCenter())
+                .normalize();
     }
 }
