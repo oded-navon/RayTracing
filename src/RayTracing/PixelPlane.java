@@ -2,6 +2,8 @@ package RayTracing;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import static java.lang.Math.round;
+
 
 /**
  * Created by orrbarkat on 27/05/2017.
@@ -13,7 +15,7 @@ public class PixelPlane {
 
     private int imageWidth = 500;
     private int imageHeight = 500;
-    private int[][][] rgb;
+    private float[][][] rgb;
     private Vector3D topLeft;
     private Vector3D horizontalstep;
     private Vector3D verticalstep;
@@ -21,7 +23,7 @@ public class PixelPlane {
 
 
     public PixelPlane(Scene scene){
-        rgb = new int[imageHeight][imageWidth][3];
+        rgb = new float[imageHeight][imageWidth][3];
         cam = scene.camera;
         setTopLeft();
     }
@@ -29,7 +31,7 @@ public class PixelPlane {
     public PixelPlane(int hight, int width, Scene scene){
         imageHeight = hight;
         imageWidth = width;
-        rgb = new int[imageWidth][imageHeight][3];
+        rgb = new float[imageWidth][imageHeight][3];
         cam = scene.camera;
         setTopLeft();
     }
@@ -56,19 +58,24 @@ public class PixelPlane {
         for(i=0; i<getImageWidth(); i++){
             for(j=0; j<getImageHeight(); j++){
                 base = (j * this.imageWidth + i) * 3;
-                rgbData[base] = (byte) rgb[i][j][RED];
-                rgbData[base+GREEN] = (byte)rgb[i][j][GREEN];
-                rgbData[base+BLUE] = (byte)rgb[i][j][BLUE];
+                rgbData[base] = packToByte(rgb[i][j][RED]);
+                rgbData[base+GREEN] = packToByte(rgb[i][j][GREEN]);
+                rgbData[base+BLUE] = packToByte(rgb[i][j][BLUE]);
             }
         }
         return rgbData;
     }
 
-    public void setPixelColor(int x, int y, int[] color){
+    private byte packToByte(double color){
+        double byteColor = Double.min(Double.max(0, color), 1);
+        return (byte) round(255*byteColor);
+    }
+
+    public void setPixelColor(int x, int y, float[] color){
         rgb[x][y] = color;
     }
 
-    public int[] getPixelColor(int x, int y){
+    public float[] getPixelColor(int x, int y){
         return rgb[x][y];
     }
 

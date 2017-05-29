@@ -44,8 +44,8 @@ public class Plane implements Shape
 
         double numerator = -(ray.getPoint().dotProduct(this.getNormal())+this.getOffset());
         double denominator = ray.getDirection().dotProduct(this.getNormal());
-
-        return numerator/denominator;
+        double res = numerator/denominator;
+        return res > 0 ? res : Double.MAX_VALUE;
     }
 
     @Override

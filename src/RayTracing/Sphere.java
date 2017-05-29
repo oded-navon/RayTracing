@@ -47,8 +47,11 @@ public class Sphere implements Shape
             return Double.MAX_VALUE;
         }
         double singleSolution = (-bCoefficent)/(2*aCoefficent);
+        singleSolution = singleSolution > 0 ? singleSolution : Double.MAX_VALUE;
         double solution1 = (-bCoefficent+discriminant)/(2*aCoefficent);
+        solution1 = solution1 > 0 ? solution1 : Double.MAX_VALUE;
         double solution2 = (-bCoefficent-discriminant)/(2*aCoefficent);
+        solution2 = solution2 > 0 ? solution2 : Double.MAX_VALUE;
 
         return discriminant==0 ? singleSolution : Math.min(solution1,solution2);
     }

@@ -42,7 +42,7 @@ public class Triangle implements Shape
     public double IntersectRay(Ray ray)
     {
         double planeInter = this.trianglePlane.IntersectRay(ray);
-        if (planeInter==Double.MAX_VALUE)
+        if (planeInter==Double.MAX_VALUE || planeInter<0)
         {
             return Double.MAX_VALUE;
         }
@@ -52,19 +52,19 @@ public class Triangle implements Shape
         Vector3D vec3 = vertex3.subtract(ray.getPoint());
         //first side
         Vector3D norm1 = vec1.crossProduct(vec2).normalize();
-        if (this.trianglePlane.getNormal().subtract(ray.getPoint()).dotProduct(norm1)<0)
+        if (ray.getDirection().dotProduct(norm1)<0)
         {
             return Double.MAX_VALUE;
         }
         //second side
-        Vector3D norm2 = vec1.crossProduct(vec3).normalize();
-        if (this.trianglePlane.getNormal().subtract(ray.getPoint()).dotProduct(norm2)<0)
+        Vector3D norm2 = vec2.crossProduct(vec3).normalize();
+        if (ray.getDirection().dotProduct(norm2)<0)
         {
             return Double.MAX_VALUE;
         }
         //third side
-        Vector3D norm3 = vec2.crossProduct(vec3).normalize();
-        if (this.trianglePlane.getNormal().subtract(ray.getPoint()).dotProduct(norm3)<0)
+        Vector3D norm3 = vec3.crossProduct(vec1).normalize();
+        if (ray.getDirection().dotProduct(norm3)<0)
         {
             return Double.MAX_VALUE;
         }
@@ -73,6 +73,9 @@ public class Triangle implements Shape
 
     @Override
     public Vector3D getNormal(Ray ray, double distance) {
-        return this.getVertex1().crossProduct(this.getVertex2()).normalize();
+        Vector3D v1 = getVertex1().subtract(getVertex2());
+        return getVertex3().subtract(getVertex2())
+                .crossProduct(v1)
+                .normalize();
     }
 }

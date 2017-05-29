@@ -32,4 +32,5 @@ public class Settings
         MaxRecursionLevel = maxRecursionLevel;
         SuperSamplingLevel = superSamplingLevel;
     }
+
 }

@@ -22,4 +22,8 @@ public class Ray {
     public Vector3D getDirection() {
         return direction;
     }
+
+    public Vector3D getIntersection(double t){
+        return getPoint().add(t, getDirection());
+    }
 }

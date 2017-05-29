@@ -79,7 +79,7 @@ public class RayTracer {
 	{
 		long startTime = System.currentTimeMillis();
 		Ray ray;
-		int[] rgb;
+		float[] rgb;
 
 		for(int x=0; x<pixelPlane.getImageWidth(); x++){
 			for(int y=0; y<pixelPlane.getImageHeight(); y++){
