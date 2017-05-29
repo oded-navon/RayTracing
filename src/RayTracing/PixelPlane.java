@@ -84,9 +84,8 @@ public class PixelPlane {
                 .scalarMultiply(cam.getScreenDistance());
         center = cam.getPosition()
                 .add(center);
-        Vector3D corner = center.add(stepUp(((double)imageHeight)/2))
-                .subtract(stepRight(((double)imageWidth)/2);
-        topLeft =  corner;
+        topLeft = center.add(stepUp(((double)imageHeight)/2)-0.5)
+                .subtract(stepRight((((double)imageWidth)/2)-0.5);
     }
 
     private Vector3D stepUp(double numOfSteps){
