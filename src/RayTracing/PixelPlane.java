@@ -110,4 +110,9 @@ public class PixelPlane {
         }
         return verticalstep.scalarMultiply(numOfSteps);
     }
+
+    public Ray constructRayTroughPixel(int x, int y){
+        Vector3D dir = getPixelPosition(x,y).subtract(cam.getPosition());
+        return new Ray(getPixelPosition(x,y), dir);
+    }
 }
