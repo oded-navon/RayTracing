@@ -9,7 +9,8 @@ public class Ray {
     private Vector3D point;
     private Vector3D direction;
 
-    public Ray(Vector3D start, Vector3D dir) {
+    public Ray(Vector3D start, Vector3D dir)
+    {
         point = start;
         direction = dir;
     }

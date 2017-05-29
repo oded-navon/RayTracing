@@ -25,4 +25,5 @@ public class Plane
         this.offset = offset;
         this.materialIndex = materialIndex;
     }
+
 }
