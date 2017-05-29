@@ -15,5 +15,11 @@ public class Ray {
         direction = dir;
     }
 
+    public Vector3D getPoint() {
+        return point;
+    }
 
+    public Vector3D getDirection() {
+        return direction;
+    }
 }

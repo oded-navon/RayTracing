@@ -1,7 +1,7 @@
 package RayTracing;
 
 
-public class Sphere
+public class Sphere implements Shape
 {
     private float[] center;
     private float radius;
@@ -18,11 +18,18 @@ public class Sphere
         return center;
     }
 
-    public float getRadius() {
+    public float getRadius()
+    {
         return radius;
     }
 
     public int getMaterialIndex() {
         return materialIndex;
+    }
+
+    @Override
+    public float IntersectRay(Ray ray)
+    {
+
     }
 }
