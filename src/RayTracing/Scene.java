@@ -37,6 +37,7 @@ public class Scene
             color[0] = settings.getRGB()[j] * material.getTransparency() +
                     (1-material.getTransparency()) * (material.getDiffuseColor()[j]+ material.getSpecularColor()[j]) +
                     material.getReflectionColor()[j];
+            System.out.println(color[0]);
             rgb[j] = Integer.min((int)round(color[0] *255),255);
             rgb[j] = Integer.max(rgb[j],0);
         });

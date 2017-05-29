@@ -111,7 +111,7 @@ public class PixelPlane {
     }
 
     public Ray constructRayTroughPixel(int x, int y){
-        Vector3D dir = getPixelPosition(x,y).subtract(cam.getPosition());
-        return new Ray(getPixelPosition(x,y), dir);
+        Vector3D pos = getPixelPosition(x,y);
+        return new Ray(pos, pos.subtract(cam.getPosition()));
     }
 }
