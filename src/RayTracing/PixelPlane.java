@@ -2,7 +2,6 @@ package RayTracing;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import javax.vecmath.Vector3d;
 
 /**
  * Created by orrbarkat on 27/05/2017.

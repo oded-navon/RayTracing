@@ -16,7 +16,7 @@ public class RayTracer {
 //	public int imageWidth;
 //	public int imageHeight;
 	public Scene scene;
-	public PixelPlane pixelPlane = new PixelPlane();
+	public PixelPlane pixelPlane;
 
 
 	/**
