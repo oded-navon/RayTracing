@@ -23,4 +23,5 @@ public class Scene
         Lights = new ArrayList<Light>();
     }
 
+
 }
