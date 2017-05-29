@@ -52,4 +52,9 @@ public class Sphere implements Shape
 
         return discriminant==0 ? singleSolution : Math.min(solution1,solution2);
     }
+
+    @Override
+    public Vector3D getNormal(Ray ray, double distance) {
+        return null;
+    }
 }
