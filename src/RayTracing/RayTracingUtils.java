@@ -45,7 +45,7 @@ public class RayTracingUtils {
                     float upVector[] = {Float.parseFloat(params[6]),Float.parseFloat(params[7]),Float.parseFloat(params[8])};
                     float screenDist = Float.parseFloat(params[9]);
                     float screenWidth = Float.parseFloat(params[10]);
-                    scene.Camera = new Camera(pos,lookAtPos,upVector,screenDist,screenWidth);
+                    scene.camera = new Camera(pos,lookAtPos,upVector,screenDist,screenWidth);
 
                     System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
                 }
@@ -55,7 +55,7 @@ public class RayTracingUtils {
                     int shadowRays = Integer.parseInt(params[3]);
                     int maxRecNum = Integer.parseInt(params[4]);
                     int superSmapLev = Integer.parseInt(params[5]);
-                    scene.Settings = new Settings(backColor,shadowRays,maxRecNum,superSmapLev);
+                    scene.settings = new Settings(backColor,shadowRays,maxRecNum,superSmapLev);
 
                     System.out.println(String.format("Parsed general settings (line %d)", lineNum));
                 }
@@ -67,7 +67,7 @@ public class RayTracingUtils {
                     float phongSpec = Float.parseFloat(params[9]);
                     float trans = Float.parseFloat(params[10]);
                     RayTracing.Material sceneMat = new RayTracing.Material(diffCol,specCol,refCol,phongSpec,trans);
-                    scene.Materials.add(sceneMat);
+                    scene.materials.add(sceneMat);
 
                     System.out.println(String.format("Parsed material (line %d)", lineNum));
                 }
@@ -78,7 +78,7 @@ public class RayTracingUtils {
                     int matIndex = Integer.parseInt(params[4]);
 
                     Sphere sceneSphere = new Sphere(center,radius,matIndex);
-                    scene.Spheres.add(sceneSphere);
+                    scene.shapes.add(sceneSphere);
 
                     System.out.println(String.format("Parsed sphere (line %d)", lineNum));
                 }
@@ -89,7 +89,7 @@ public class RayTracingUtils {
                     int planeMatIndex = Integer.parseInt(params[4]);
 
                     Plane scenePlane = new Plane(normal,offset,planeMatIndex);
-                    scene.Planes.add(scenePlane);
+                    scene.shapes.add(scenePlane);
 
                     System.out.println(String.format("Parsed plane (line %d)", lineNum));
                 }
@@ -101,7 +101,7 @@ public class RayTracingUtils {
                     int trigMatIndex = Integer.parseInt(params[9]);
 
                     Triangle sceneTrig = new Triangle(ver1,ver2,ver3,trigMatIndex);
-                    scene.Triangles.add(sceneTrig);
+                    scene.shapes.add(sceneTrig);
 
                     System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
                 }
@@ -113,7 +113,7 @@ public class RayTracingUtils {
                     float shadIntensity = Float.parseFloat(params[7]);
                     float lightRadius = Float.parseFloat(params[8]);
 
-                    scene.Lights.add(new Light(lightPos,lightRgb,specIntensity,shadIntensity,lightRadius));
+                    scene.lights.add(new Light(lightPos,lightRgb,specIntensity,shadIntensity,lightRadius));
 
                     System.out.println(String.format("Parsed light (line %d)", lineNum));
                 }

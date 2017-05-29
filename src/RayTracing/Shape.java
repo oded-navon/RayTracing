@@ -8,4 +8,6 @@ public interface Shape
     double IntersectRay(Ray ray);
 
     Vector3D getNormal(Ray ray, double distance);
+
+    int getMaterialIndex();
 }

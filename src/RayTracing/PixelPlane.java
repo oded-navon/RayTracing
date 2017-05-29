@@ -22,7 +22,7 @@ public class PixelPlane {
 
     public PixelPlane(Scene scene){
         rgb = new int[imageHeight][imageWidth][3];
-        cam = scene.Camera;
+        cam = scene.camera;
         setTopLeft();
     }
 
@@ -30,7 +30,7 @@ public class PixelPlane {
         imageHeight = hight;
         imageWidth = width;
         rgb = new int[imageWidth][imageHeight][3];
-        cam = scene.Camera;
+        cam = scene.camera;
         setTopLeft();
     }
 
@@ -51,21 +51,21 @@ public class PixelPlane {
     }
 
     public byte[] getAsByteArray(){
-        int i,j,base = 0,0,0;
+        int i,j,base = 0;
         byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
         for(i=0; i<getImageWidth(); i++){
             for(j=0; j<getImageHeight(); j++){
                 base = (j * this.imageWidth + i) * 3;
-                rgbData[base] = rgbData[i][j][RED];
-                rgbData[base+GREEN] = rgbData[i][j][GREEN];
-                rgbData[base+BLUE] = rgbData[i][j][BLUE];
+                rgbData[base] = (byte) rgb[i][j][RED];
+                rgbData[base+GREEN] = (byte)rgb[i][j][GREEN];
+                rgbData[base+BLUE] = (byte)rgb[i][j][BLUE];
             }
         }
         return rgbData;
     }
 
-    public void setPixelColor(int x, int y, byte red, byte green, byte blue){
-
+    public void setPixelColor(int x, int y, int[] color){
+        rgb[x][y] = color;
     }
 
     public int[] getPixelColor(int x, int y){
@@ -84,8 +84,8 @@ public class PixelPlane {
                 .scalarMultiply(cam.getScreenDistance());
         center = cam.getPosition()
                 .add(center);
-        topLeft = center.add(stepUp(((double)imageHeight)/2)-0.5)
-                .subtract(stepRight((((double)imageWidth)/2)-0.5);
+        topLeft = center.add(stepUp((((double)imageHeight)/2)-0.5))
+                .subtract(stepRight((((double)imageWidth)/2)-0.5));
     }
 
     private Vector3D stepUp(double numOfSteps){

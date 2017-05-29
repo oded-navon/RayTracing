@@ -18,6 +18,21 @@ public class RayTracer {
 	public Scene scene;
 	public PixelPlane pixelPlane;
 
+	public Scene getScene() {
+		return scene;
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
+	}
+
+	public PixelPlane getPixelPlane() {
+		return pixelPlane;
+	}
+
+	public void setPixelPlane(PixelPlane pixelPlane) {
+		this.pixelPlane = pixelPlane;
+	}
 
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
@@ -37,16 +52,12 @@ public class RayTracer {
 
 			String sceneFileName = args[0];
 			String outputFileName = args[1];
-
-			if (args.length > 3)
-			{
-				tracer.pixelPlane.setImageWidth(Integer.parseInt(args[2]));
-				tracer.pixelPlane.setImageHeight(Integer.parseInt(args[3]));
-			}
-
-
 			// Parse scene file:
 			tracer.scene =  RayTracingUtils.parseScene(sceneFileName);
+
+			tracer.pixelPlane = (args.length > 3) ?
+					new PixelPlane(Integer.parseInt(args[2]),Integer.parseInt(args[3]),tracer.scene ) :
+					new PixelPlane(500,500, tracer.scene);
 
 			// Render scene:
 			tracer.renderScene(outputFileName);
@@ -67,13 +78,18 @@ public class RayTracer {
 	public void renderScene(String outputFileName)
 	{
 		long startTime = System.currentTimeMillis();
-
-		// Create a byte array to hold the pixel data:
-//		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
+		Ray ray;
+		int[] rgb;
 
 		for(int x=0; x<pixelPlane.getImageWidth(); x++){
 			for(int y=0; y<pixelPlane.getImageHeight(); y++){
-				pixelPlane.setPixel(x,y,rgb);
+				System.out.println("x: "+x+" Y: "+y);
+				if(x==29){
+					System.out.println("got here");
+				}
+				ray = pixelPlane.constructRayTroughPixel(x,y);
+				rgb = scene.intersectWithRay(ray);
+				pixelPlane.setPixelColor(x,y,rgb);
 			}
 		}
 

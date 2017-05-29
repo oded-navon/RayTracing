@@ -9,9 +9,9 @@ public class Sphere implements Shape
     private float radius;
     private int materialIndex;
 
-    public Sphere(Vector3D center, float radius, int materialIndex)
+    public Sphere(float[] center, float radius, int materialIndex)
     {
-        this.center = center;
+        this.center = new Vector3D(center[0], center[1], center[2]);
         this.radius = radius;
         this.materialIndex = materialIndex;
     }
