@@ -24,7 +24,10 @@ public class Scene
         lights = new ArrayList<Light>();
     }
 
-    public Color computeRGBForRay(Ray ray){
+    public Color computeRGBForRay(Ray ray, int recursion){
+        if (recursion >= settings.getMaxRecursionLevel())
+                return settings.getRGB();
+
         Intersection closest = rayIntersection(ray);
         // no intersction for the ray with the scene
         if(closest.getShapeIdx() < 0)
@@ -34,14 +37,13 @@ public class Scene
         Shape shape = shapes.get(closest.getShapeIdx()); // this convertion might cause problems
         Material material = getMaterial(shape);
         Vector3D hitPoint = ray.getIntersection(closest.getDistance());
-        Color outputColor =  settings.getRGB()
-                .mult(material.getTransparency()) // backgorund color
+        Color outputColor =  settings.getRGB().mult(material.getTransparency()) // backgorund color
                 .add( // diffuse + specular
                         getSpecularColor(shape,closest.getDistance(), ray)
 //                .add(getDiffuseColor()) // diffuse color
                         .mult(1-material.getTransparency())
-//                ).add(// reflection color
-//
+                ).add(// reflection color
+                    getReflectionColor(shape,ray, closest.getDistance(), recursion)
                 );
         return outputColor;
     }
@@ -77,7 +79,7 @@ public class Scene
             Vector3D phongRay = shapeNormal.scalarMultiply(lightDir.dotProduct(shapeNormal)*2).subtract(lightDir).normalize();
             double R_V = phongRay.dotProduct(inRay.getDirection().negate().normalize());
             double phongExponent = R_V > 0 ? light.getSpecularIntensity()*Math.pow(R_V, phong_coef) : 0.0;
-            result = result.add(material.getSpecularColor().mult(phong_coef));
+            result = result.add(light.getRGB().mult(phongExponent));
         }
         return result;
     }
@@ -86,7 +88,13 @@ public class Scene
      return materials.get(shape.getMaterialIndex()-1);
     }
 
-//    private Color getReflectionColor();
+    private Color getReflectionColor(Shape shape, Ray ray, double distance, int recursion){
+        if(recursion >= settings.getMaxRecursionLevel())
+            return settings.getRGB();
+
+        Ray reflection = new Ray(ray.getIntersection(distance*0.99), ray.getDirection());
+        return computeRGBForRay(reflection, recursion + 1);
+    }
 
     class Intersection{
         private int shapeIdx = -1;

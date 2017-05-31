@@ -6,7 +6,7 @@ public class Material
     public Material(float[] diffuseColor, float[] specularColor, float[] reflectionColor, float phongSpecularityCoefficient, float transparency) {
         this.diffuseColor = diffuseColor;
         this.specularColor = new Color(specularColor[0], specularColor[1],specularColor[2]);
-        this.reflectionColor = reflectionColor;
+        this.reflectionColor = new Color(reflectionColor);
         this.phongSpecularityCoefficient = phongSpecularityCoefficient;
         setTransparency(transparency);
     }
@@ -14,7 +14,7 @@ public class Material
     //Properties
     public float [] diffuseColor;
     public Color specularColor;
-    public float [] reflectionColor;
+    public Color reflectionColor;
     public float phongSpecularityCoefficient;
     private float transparency;
 
@@ -26,11 +26,11 @@ public class Material
         this.specularColor = new Color(specularColor);
     }
 
-    public float[] getReflectionColor() {
+    public Color getReflectionColor() {
         return reflectionColor;
     }
 
-    public void setReflectionColor(float[] reflectionColor) {
+    public void setReflectionColor(Color reflectionColor) {
         this.reflectionColor = reflectionColor;
     }
 
