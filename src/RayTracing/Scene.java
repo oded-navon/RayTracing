@@ -5,6 +5,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class Scene
@@ -38,7 +40,7 @@ public class Scene
                 .mult(material.getTransparency()) // backgorund color
                 .add( // diffuse + specular
                         getSpecularColor(shape,closest.getDistance(), ray)
-//                .add(getDiffuseColor()) // diffuse color
+                .add(getDiffuseColor(shape, ray, closest.getDistance())) // diffuse color
                         .mult(1-material.getTransparency())
 //                ).add(// reflection color
 //
@@ -84,6 +86,70 @@ public class Scene
 
     private Material getMaterial(Shape shape){
      return materials.get(shape.getMaterialIndex()-1);
+    }
+
+    private Color getDiffuseColor(Shape shape, Ray inRay, double distance)
+    {
+        Color finalColor = new Color(new float[] {0,0,0});
+        for (Light light : lights)
+        {
+            finalColor.add(getSingleLightDiffuseColor(shape, inRay, distance, light));
+        }
+        return finalColor;
+    }
+
+    private Color getSingleLightDiffuseColor(Shape shape, Ray inRay, double distance,Light light)
+    {
+        //I_D = K_D* (N^ dot L^) * I_L
+        Vector3D normalizedReturningLightVectorL = light.getPosition().negate().normalize();
+        Vector3D shapeNormal = shape.getNormal(inRay, distance);
+        double nDotL = shapeNormal.dotProduct(normalizedReturningLightVectorL);
+
+        Color shapeMaterialDiffuseColor = new Color(getMaterial(shape).getDiffuseColor());
+
+        return  Color.getAsColor(shapeMaterialDiffuseColor.scalarMultiply(nDotL*light.getSpecularIntensity()));
+    }
+
+
+    // compute diffuse using all lights
+    private float[] getSoftShadowForLight(Material material, Ray pixelRay, Vector3D hitPoint,Light light)
+    {
+        double lightRadius = light.getLightRadius();
+        double numOfCells = lightRadius/settings.getShadowRay();
+
+        Plane perpenPlane = new Plane(light.getPosition().normalize(),;
+
+        Vector3D startingLight = light.getPosition().subtract(
+                upVector.scalarMultiply(lightRadius/2)).subtract(
+                ViewerVector.scalarMultiply(lightRadius/2));
+
+        List<Vector3D> lightVectors;
+
+        Random randGen = new Random();
+        for (int i=0 ; i<settings.getShadowRay() ; i++)
+        {
+            for (int j = 0; j < settings.getShadowRay(); j++)
+            {
+                double x = randGen.nextDouble();
+                double y = randGen.nextDouble();
+                while (x == 0.0) x = randGen.nextDouble();
+                while (y == 0.0) y = randGen.nextDouble();
+
+
+
+                Vector3D normal = light.getPosition().subtract(hitPoint).normalize();
+                Vector3D upVector = camera.getUpVector().crossProduct(normal).normalize();
+                Vector3D ViewerVector = normal.crossProduct(upVector);
+
+
+                Vector3D currentLight = startingLight.add(upVector.scalarMultiply(j * numOfCells)).add(ViewerVector.scalarMultiply(i * numOfCells));
+
+                currentLight = currentLight.add(upVector.scalarMultiply(numOfCells * x)).add(
+                        ViewerVector.scalarMultiply(numOfCells * y));
+
+                lightVectors.add(currentLight);
+            }
+        }
     }
 
 //    private Color getReflectionColor();
