@@ -50,6 +50,7 @@ public class Scene
         return outputColor;
     }
 
+
     // get all the shapes intersecting
     private Intersection rayIntersection(Ray ray ){
         int i =-1;
