@@ -16,7 +16,7 @@ public class Color extends Vector3D {
         return rgb;
     }
 
-    public static Color getAsColor(Vector vec){
+    public static Color getAsColor(Vector3D vec){
         return new Color(((float) vec.getX()),((float) vec.getY()),((float) vec.getZ()));
     }
 
@@ -25,5 +25,22 @@ public class Color extends Vector3D {
         return new Color((float)(this.getX()*other.getX()),
                 (float)(this.getY()*other.getY()),
                 (float)(this.getZ()*other.getZ()));
+    }
+
+    public Color mult(double factor){
+        return new Color((float)(this.getX() * factor),
+                (float)(this.getY()* factor),
+                (float)(this.getZ()* factor));
+    }
+
+    public Color mult(float factor){
+        return new Color((float)(this.getX() * factor),
+                (float)(this.getY()* factor),
+                (float)(this.getZ()* factor));
+    }
+
+    @Override
+    public Color add(Color other){
+        return new Color(getAsColor(super.add(other)));
     }
 }
