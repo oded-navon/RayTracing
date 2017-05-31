@@ -61,11 +61,11 @@ public class Sphere implements Shape
         Vector3D L = getCenter().subtract(ray.getPoint());
         double ca = L.dotProduct(ray.getDirection());
         if (ca < 0)
-            return -1;
+            return Double.MAX_VALUE;
         double distance_squared = L.dotProduct(L) - ca*ca;
         double r_sqrd = getRadius()*getRadius();
         if (distance_squared > r_sqrd)
-            return -1;
+            return Double.MAX_VALUE;
         double thc = Math.sqrt(r_sqrd - distance_squared);
         return ca - thc;
     }
