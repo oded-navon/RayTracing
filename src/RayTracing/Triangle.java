@@ -44,7 +44,7 @@ public class Triangle implements Shape
         double planeInter = this.trianglePlane.IntersectRay(ray);
         if (planeInter==Double.MAX_VALUE || planeInter<0)
         {
-            return Double.MAX_VALUE;
+            return -1;
         }
         //check that the intersection is inside the triangle
         Vector3D vec1 = vertex1.subtract(ray.getPoint());
@@ -54,19 +54,19 @@ public class Triangle implements Shape
         Vector3D norm1 = vec1.crossProduct(vec2).normalize();
         if (ray.getDirection().dotProduct(norm1)<0)
         {
-            return Double.MAX_VALUE;
+            return -1;
         }
         //second side
         Vector3D norm2 = vec2.crossProduct(vec3).normalize();
         if (ray.getDirection().dotProduct(norm2)<0)
         {
-            return Double.MAX_VALUE;
+            return -1;
         }
         //third side
         Vector3D norm3 = vec3.crossProduct(vec1).normalize();
         if (ray.getDirection().dotProduct(norm3)<0)
         {
-            return Double.MAX_VALUE;
+            return -1;
         }
         return planeInter;
     }

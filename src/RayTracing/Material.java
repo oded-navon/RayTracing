@@ -23,7 +23,7 @@ public class Material
     }
 
     public void setSpecularColor(float[] specularColor) {
-        this.specularColor = specularColor;
+        this.specularColor = new Color(specularColor);
     }
 
     public float[] getReflectionColor() {

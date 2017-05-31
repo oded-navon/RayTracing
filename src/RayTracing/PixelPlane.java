@@ -115,7 +115,7 @@ public class PixelPlane {
                     .normalize()
                     .scalarMultiply(size);
         }
-        return verticalstep.scalarMultiply(numOfSteps);
+        return horizontalstep.scalarMultiply(numOfSteps);
     }
 
     public Ray constructRayTroughPixel(int x, int y){

@@ -11,6 +11,11 @@ public class Color extends Vector3D {
         super(r,g,b);
     }
 
+    public Color(float[] rgb) {
+        super(rgb[0], rgb[1], rgb[2]);
+    }
+
+
     public float[] getRGB() {
         float[] rgb = {((float) getX()),((float) getY()),((float) getZ())};
         return rgb;
@@ -39,8 +44,7 @@ public class Color extends Vector3D {
                 (float)(this.getZ()* factor));
     }
 
-    @Override
     public Color add(Color other){
-        return new Color(getAsColor(super.add(other)));
+        return getAsColor(super.add(other));
     }
 }

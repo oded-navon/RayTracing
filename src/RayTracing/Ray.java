@@ -12,7 +12,7 @@ public class Ray {
     public Ray(Vector3D start, Vector3D dir)
     {
         point = start;
-        direction = dir;
+        direction = dir.normalize();
     }
 
     public Vector3D getPoint() {

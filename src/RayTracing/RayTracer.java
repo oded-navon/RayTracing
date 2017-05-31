@@ -88,7 +88,7 @@ public class RayTracer {
 					System.out.println("got here");
 				}
 				ray = pixelPlane.constructRayTroughPixel(x,y);
-				rgb = scene.computeRGBForRay(ray);
+				rgb = scene.computeRGBForRay(ray).getRGB();
 				pixelPlane.setPixelColor(x,y,rgb);
 			}
 		}
