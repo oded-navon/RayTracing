@@ -67,6 +67,14 @@ public class Scene
         return Math.abs(closest.getDistance()- distance) > 0.1;
     }
 
+    private boolean lightIntersectsWithPoint(Vector3D hitPoint,Vector3D light)
+    {
+        double distance = light.distance(hitPoint);
+        Ray lightRay = new Ray(light, light.subtract(hitPoint));
+        Intersection closest = rayIntersection(lightRay);
+        return Math.abs(closest.getDistance()- distance) < 0.1;
+    }
+
     private Color getSpecularColor(Shape shape, double distance, Ray inRay){
         // let's compute R,
         Color result = new Color(0,0,0);
@@ -100,6 +108,7 @@ public class Scene
         Color reflection_Color = getMaterial(shape).getReflectionColor();
         return computeRGBForRay(reflection, recursion + 1).mult(reflection_Color);
     }
+
     private Color getDiffuseColor(Shape shape, Ray inRay, double distance)
     {
         Color finalColor = new Color(new float[] {0,0,0});
@@ -126,46 +135,18 @@ public class Scene
     }
 
 
-    // compute diffuse using all lights
-//    private float[] getSoftShadowForLight(Material material, Ray pixelRay, Vector3D hitPoint,Light light)
-//    {
-//        double lightRadius = light.getLightRadius();
-//        double numOfCells = lightRadius/settings.getShadowRay();
-//
-////        Plane perpenPlane = new Plane(light.getPosition().normalize(),;
-////
-////        Vector3D startingLight = light.getPosition().subtract(
-////                upVector.scalarMultiply(lightRadius/2)).subtract(
-////                ViewerVector.scalarMultiply(lightRadius/2));
-//
-//        List<Vector3D> lightVectors;
-//
-//        Random randGen = new Random();
-//        for (int i=0 ; i<settings.getShadowRay() ; i++)
-//        {
-//            for (int j = 0; j < settings.getShadowRay(); j++)
-//            {
-//                double x = randGen.nextDouble();
-//                double y = randGen.nextDouble();
-//                while (x == 0.0) x = randGen.nextDouble();
-//                while (y == 0.0) y = randGen.nextDouble();
-//
-//
-//
-//                Vector3D normal = light.getPosition().subtract(hitPoint).normalize();
-//                Vector3D upVector = camera.getUpVector().crossProduct(normal).normalize();
-//                Vector3D ViewerVector = normal.crossProduct(upVector);
-//
-//
-////                Vector3D currentLight = startingLight.add(upVector.scalarMultiply(j * numOfCells)).add(ViewerVector.scalarMultiply(i * numOfCells));
-//
-//                currentLight = currentLight.add(upVector.scalarMultiply(numOfCells * x)).add(
-//                        ViewerVector.scalarMultiply(numOfCells * y));
-//
-//                lightVectors.add(currentLight);
-//            }
-//        }
-//    }
+    private double getSoftShadowForLight(Material material, Ray pixelRay, Vector3D hitPoint,Light light)
+    {
+        Vector3D lightVectorToHitPoint = hitPoint.subtract(light.getPosition());
+
+        PixelPlane lightPlane = new PixelPlane(light,lightVectorToHitPoint);
+
+        List<Vector3D> lightVectors = lightPlane.generateVectors(light,settings);
+
+        long numOfIntersectingLights = lightVectors.stream().filter(lightVector -> lightIntersectsWithPoint(hitPoint,lightVector)).count();
+
+        return numOfIntersectingLights/(Math.pow(light.getLightRadius(),2));
+    }
 
     private Color getTransperencyColor(Shape shape, Ray ray, double distance, int recursion){
         if(recursion >= settings.getMaxRecursionLevel())
@@ -177,6 +158,10 @@ public class Scene
         Color res = computeRGBForRay(forward, recursion+1);
         return res.mult(transCoeff);
     }
+
+
+
+//    private Color getReflectionColor();
 
     class Intersection{
         private int shapeIdx = -1;

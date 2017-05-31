@@ -56,8 +56,8 @@ public class RayTracer {
 			tracer.scene =  RayTracingUtils.parseScene(sceneFileName);
 
 			tracer.pixelPlane = (args.length > 3) ?
-					new PixelPlane(Integer.parseInt(args[2]),Integer.parseInt(args[3]),tracer.scene ) :
-					new PixelPlane(500,500, tracer.scene);
+					new PixelPlane(Integer.parseInt(args[2]),Integer.parseInt(args[3]),tracer.scene.camera ) :
+					new PixelPlane(500,500, tracer.scene.camera);
 
 			// Render scene:
 			tracer.renderScene(outputFileName);
