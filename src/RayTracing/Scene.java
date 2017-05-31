@@ -91,9 +91,11 @@ public class Scene
     private Color getReflectionColor(Shape shape, Ray ray, double distance, int recursion){
         if(recursion >= settings.getMaxRecursionLevel())
             return settings.getRGB();
-
-        Ray reflection = new Ray(ray.getIntersection(distance*0.99), ray.getDirection());
-        return computeRGBForRay(reflection, recursion + 1);
+        Vector3D N = shape.getNormal(ray,distance);
+        Vector3D reflectionDir = ray.getDirection().subtract(2*ray.getDirection().dotProduct(N),N);
+        Ray reflection = new Ray(ray.getIntersection(distance*0.99),reflectionDir);
+        Color reflection_Color = getMaterial(shape).getReflectionColor();
+        return computeRGBForRay(reflection, recursion + 1).mult(reflection_Color);
     }
 
     class Intersection{
