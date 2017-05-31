@@ -1,13 +1,13 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector;
 
 public interface Shape
 {
     double IntersectRay(Ray ray);
 
-    Vector3D getNormal(Ray ray, double distance);
+    Vector getNormal(Ray ray, double distance);
 
     int getMaterialIndex();
 }

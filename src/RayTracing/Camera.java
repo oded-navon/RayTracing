@@ -1,25 +1,25 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector;
 
 public class Camera
 {
-    private Vector3D Position;
-    private Vector3D LookAtPosition;
-    private Vector3D UpVector;
+    private Vector Position;
+    private Vector LookAtPosition;
+    private Vector UpVector;
     private float ScreenDistance;
     private float ScreenWidth;
 
-    public Vector3D getPosition() {
+    public Vector getPosition() {
         return Position;
     }
 
-    public Vector3D getLookAtPosition() {
+    public Vector getLookAtPosition() {
         return LookAtPosition;
     }
 
-    public Vector3D getUpVector() {
+    public Vector getUpVector() {
         return UpVector;
     }
 
@@ -33,9 +33,9 @@ public class Camera
 
     public Camera(float[] position, float[] lookAtPosition, float[] upVector, float screenDistance, float screenWidth) {
 
-        Position = new Vector3D(position[0], position[1], position[2]);
-        LookAtPosition = new Vector3D(lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
-        UpVector = new Vector3D(upVector[0], upVector[1], upVector[2]);
+        Position = new Vector(position[0], position[1], position[2]);
+        LookAtPosition = new Vector(lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
+        UpVector = new Vector(upVector[0], upVector[1], upVector[2]);
         ScreenDistance = screenDistance;
         ScreenWidth = screenWidth;
     }

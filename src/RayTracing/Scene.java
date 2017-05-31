@@ -1,7 +1,7 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,29 +29,24 @@ public class Scene
         final float[] color = new float[1];
         float[] colors;
         float[] rgb = {0,0,0};
-        double[] closest = new double[2];
-//        List<Double> distances = shapes.stream().map(shape -> shape.IntersectRay(ray)).collect(Collectors.toList());
-//        for(int k=0 ; k<distances.size();k++){
-//            if (distances.get(k)>0 && distances.get(k) < temp)
-//                temp = distances.get(k);
-//                i = k;
-//        }
-        closest = rayIntersection(ray);
-        int i = (int)closest[0];
-        if(i<0)
+        double[] closest = rayIntersection(ray);
+        // no intersction for the ray with the scene
+        if(closest[0]<0)
             return settings.getRGB();
 
         // now we have a valid intersection and we should compute lighting
         Material material = materials.get(shapes.get(i).getMaterialIndex());
-        Vector3D hitPoint = ray.getIntersection(closest[1]);
+        Vector hitPoint = ray.getIntersection(closest[1]);
+
         for (Light light: lights){
-            Ray lightRay = new Ray(light.getPosition(),
-                hitPoint.subtract(
-                        light.getPosition())
-                        .normalize());
+            Vector dir = hitPoint.subtract(
+                    light.getPosition())
+                    .normalize();
+            Ray lightRay = new Ray(light.getPosition(), dir);
             closest = rayIntersection(lightRay);
+            // check that nothing is in the way from th light to the object
             if(closest[1] >= light.getPosition().subtract(hitPoint).getNorm())
-                colors = getColorForLight(hitPoint, light);
+                colors = getColorForLight(hitPoint, light, material);
                 for(int k=0; k<3; k++){
                     rgb[k] += colors[k];
                 }
@@ -69,6 +64,7 @@ public class Scene
         return rgb;
     }
 
+    // get all the shapes intersecting
     private double[] rayIntersection(Ray ray ){
         int i = -1;
         double temp = Double.MAX_VALUE;
@@ -84,7 +80,7 @@ public class Scene
         return res;
     }
 
-    private float[] getColorForLight(Vector3D hitPoint, Light light, Material material){
+    private float[] getColorForLight(Vector hitPoint, Light light, Material material){
         IntStream.range(0,3).forEach((int j) -> {
             //background
             color[0] = settings.getRGB()[j] * material.getTransparency() +
@@ -92,5 +88,15 @@ public class Scene
                     material.getReflectionColor()[j];
             System.out.println(color[0]);
             rgb[j] = color[0];
-        });    }
+        });
+    }
+
+//    // compute diffuse using all lights
+//    private float[] getDiffuseColor(Material material, Ray pixelRay, Vector hitPoint){
+//
+//    }
+
+    private float[] getSpecularColor(Material material, Ray pixelRay, Vector hitPoint){
+
+    }
 }
