@@ -30,7 +30,7 @@ public class PixelPlane {
     public PixelPlane(Scene scene){
         rgb = new float[imageHeight][imageWidth][3];
         cam = scene.camera;
-        setTopLeft();
+        setTopLeft(cam);
     }
 
 
@@ -41,12 +41,6 @@ public class PixelPlane {
         rgb = new float[imageWidth][imageHeight][3];
         cam = camera;
         setTopLeft(camera);
-    }
-
-    public PixelPlane(Light lightRay,Vector3D lightVectorToHitPoint,){
-        light = lightRay;
-        setTopLeft(lightVectorToHitPoint);
-        setSteps(lightVectorToHitPoint);
     }
 
     public int getImageWidth() {
@@ -107,58 +101,6 @@ public class PixelPlane {
         topLeft = center.add(stepUp((((double)imageHeight)/2)-0.5))
                 .subtract(stepRight((((double)imageWidth)/2)-0.5));
     }
-
-
-    private void setSteps(Vector3D lightVectorToHitPoint)
-    {
-        horizontalstep = lightVectorToHitPoint.crossProduct(light.getPosition()).normalize();
-        verticalstep = lightVectorToHitPoint.crossProduct(horizontalstep).normalize();
-    }
-    private void setTopLeft(Vector3D lightVectorToHitPoint){
-        topLeft = lightVectorToHitPoint.add(stepUpLight((((double)light.getLightRadius())/2)-0.5))
-                .add(stepLeftLight((((double)light.getLightRadius())/2)-0.5));
-    }
-
-    private Vector3D stepUpLight(double numOfSteps){
-        return verticalstep.scalarMultiply(numOfSteps);
-    }
-    private Vector3D stepDownLight(double numOfSteps){
-        return verticalstep.scalarMultiply(-numOfSteps);
-    }
-    private Vector3D stepRightLight(double numOfSteps){
-        return horizontalstep.scalarMultiply(numOfSteps);
-    }
-    private Vector3D stepLeftLight(double numOfSteps){
-        return horizontalstep.scalarMultiply(-numOfSteps);
-    }
-
-
-    public List<Vector3D> generateVectors(Light light,Settings settings)
-    {
-        List<Vector3D> result = new ArrayList<>();
-        Random randGen = new Random();
-        float sizeOfCell = light.getLightRadius()/settings.getShadowRay();
-
-        for (int i=0 ; i<settings.getShadowRay() ; i++)
-        {
-            for (int j = 0; j < settings.getShadowRay(); j++)
-            {
-                //nextDouble returns a number between 0.0 and 1.0
-                double x = randGen.nextDouble();
-                double y = randGen.nextDouble();
-                while (x == 0.0) x = randGen.nextDouble();
-                while (y == 0.0) y = randGen.nextDouble();
-
-                // Go to the cell
-                Vector3D currentLight = topLeft.add(stepDownLight(j * sizeOfCell)).add((stepRightLight(i * sizeOfCell)));
-                // move to random point in it
-                currentLight = currentLight.add(stepDownLight(x * sizeOfCell)).add((stepRightLight(y * sizeOfCell)));
-                //add to result
-                result.add(currentLight);
-            }
-        }
-    }
-
 
 
     private Vector3D stepUp(double numOfSteps){

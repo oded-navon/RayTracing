@@ -37,7 +37,7 @@ public class Scene
         Shape shape = shapes.get(closest.getShapeIdx()); // this convertion might cause problems
         Material material = getMaterial(shape);
         Color outputColor =  getSpecularColor(shape,closest.getDistance(), ray).add(getDiffuseColor(shape,ray,closest.getDistance())).mult(1-material.getTransparency()
-                ).add(getTransperencyColor(shape,ray,closest.getDistance(),recursion)
+                ).add(getTransparencyColor(shape,ray,closest.getDistance(),recursion)
                 ).add(getReflectionColor(shape,ray, closest.getDistance(), recursion)
                 );
         return outputColor;
@@ -135,11 +135,11 @@ public class Scene
     }
 
 
-    private double getSoftShadowForLight(Material material, Ray pixelRay, Vector3D hitPoint,Light light)
+    private double getSoftShadowForLight(Vector3D hitPoint, Light light)
     {
         Vector3D lightVectorToHitPoint = hitPoint.subtract(light.getPosition());
 
-        PixelPlane lightPlane = new PixelPlane(light,lightVectorToHitPoint);
+        SoftShadows lightPlane = new SoftShadows(light,lightVectorToHitPoint);
 
         List<Vector3D> lightVectors = lightPlane.generateVectors(light,settings);
 
@@ -148,7 +148,8 @@ public class Scene
         return numOfIntersectingLights/(Math.pow(light.getLightRadius(),2));
     }
 
-    private Color getTransperencyColor(Shape shape, Ray ray, double distance, int recursion){
+    private Color getTransparencyColor(Shape shape, Ray ray, double distance, int recursion)
+    {
         if(recursion >= settings.getMaxRecursionLevel())
             return settings.getRGB();
         float transCoeff = getMaterial(shape).getTransparency();
