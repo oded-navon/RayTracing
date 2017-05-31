@@ -1,15 +1,15 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Plane implements Shape
 {
-    private Vector normal;
+    private Vector3D normal;
     private double offset;
     private int materialIndex;
 
-    public Vector getNormal() {
+    public Vector3D getNormal() {
         return normal;
     }
 
@@ -22,12 +22,12 @@ public class Plane implements Shape
     }
 
     public Plane(float[] normal, double offset, int materialIndex) {
-        this.normal = new Vector(normal[0], normal[1], normal[2]);
+        this.normal = new Vector3D(normal[0], normal[1], normal[2]);
         this.offset = offset;
         this.materialIndex = materialIndex;
     }
 
-    public Plane(Vector normal, double offset, int materialIndex) {
+    public Plane(Vector3D normal, double offset, int materialIndex) {
         this.normal = normal;
         this.offset = offset;
         this.materialIndex = materialIndex;
@@ -49,7 +49,7 @@ public class Plane implements Shape
     }
 
     @Override
-    public Vector getNormal(Ray ray, double distance) {
+    public Vector3D getNormal(Ray ray, double distance) {
         return this.getNormal();
     }
 }

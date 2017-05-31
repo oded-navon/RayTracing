@@ -1,7 +1,7 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +36,16 @@ public class Scene
 
         // now we have a valid intersection and we should compute lighting
         Material material = materials.get(shapes.get(i).getMaterialIndex());
-        Vector hitPoint = ray.getIntersection(closest[1]);
-
+        Vector3D hitPoint = ray.getIntersection(closest[1]);
         for (Light light: lights){
-            Vector dir = hitPoint.subtract(
+            Vector3D dir = hitPoint.subtract(
                     light.getPosition())
                     .normalize();
             Ray lightRay = new Ray(light.getPosition(), dir);
             closest = rayIntersection(lightRay);
             // check that nothing is in the way from th light to the object
             if(closest[1] >= light.getPosition().subtract(hitPoint).getNorm())
-                colors = getColorForLight(hitPoint, light, material);
+                colors = getColorForLight(hitPoint, light);
                 for(int k=0; k<3; k++){
                     rgb[k] += colors[k];
                 }
@@ -80,7 +79,7 @@ public class Scene
         return res;
     }
 
-    private float[] getColorForLight(Vector hitPoint, Light light, Material material){
+    private float[] getColorForLight(Vector3D hitPoint, Light light, Material material){
         IntStream.range(0,3).forEach((int j) -> {
             //background
             color[0] = settings.getRGB()[j] * material.getTransparency() +

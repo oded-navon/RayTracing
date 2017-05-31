@@ -1,21 +1,21 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Light
 {
-    private Vector Position;
+    private Vector3D Position;
     private float[] RGB;
     private float specularIntensity;
     private float shadowIntensity;
     private float lightRadius;
 
-    public Vector getPosition() {
+    public Vector3D getPosition() {
         return Position;
     }
 
-    public void setPosition(Vector position) {
+    public void setPosition(Vector3D position) {
         Position = position;
     }
 
@@ -52,7 +52,7 @@ public class Light
     }
 
     public Light(float[] position, float[] RGB, float specularIntensity, float shadowIntensity, float lightRadius) {
-        Position = new Vector(position[0], position[1], position[2]);
+        Position = new Vector3D(position[0], position[1], position[2]);
         this.RGB = RGB;
         this.specularIntensity = specularIntensity;
 

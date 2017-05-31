@@ -1,29 +1,29 @@
 package RayTracing;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Created by orrbarkat on 27/05/2017.
  * from: http://introcs.cs.princeton.edu/java/33design/Vector.java.html
  */
 public class Ray {
-    private Vector point;
-    private Vector direction;
+    private Vector3D point;
+    private Vector3D direction;
 
-    public Ray(Vector start, Vector dir)
+    public Ray(Vector3D start, Vector3D dir)
     {
         point = start;
         direction = dir;
     }
 
-    public Vector getPoint() {
+    public Vector3D getPoint() {
         return point;
     }
 
-    public Vector getDirection() {
+    public Vector3D getDirection() {
         return direction;
     }
 
-    public Vector getIntersection(double t){
+    public Vector3D getIntersection(double t){
         return getPoint().add(t, getDirection());
     }
 }

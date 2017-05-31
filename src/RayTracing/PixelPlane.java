@@ -1,6 +1,6 @@
 package RayTracing;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import static java.lang.Math.round;
 
@@ -16,9 +16,9 @@ public class PixelPlane {
     private int imageWidth = 500;
     private int imageHeight = 500;
     private float[][][] rgb;
-    private Vector topLeft;
-    private Vector horizontalstep;
-    private Vector verticalstep;
+    private Vector3D topLeft;
+    private Vector3D horizontalstep;
+    private Vector3D verticalstep;
     private Camera cam;
 
 
@@ -79,13 +79,13 @@ public class PixelPlane {
         return rgb[x][y];
     }
 
-    public Vector getPixelPosition(double x, double y){
+    public Vector3D getPixelPosition(double x, double y){
         return topLeft.add(stepUp(-y))
                 .add(stepRight(x));
     }
 
     private void setTopLeft(){
-        Vector center = cam.getLookAtPosition()
+        Vector3D center = cam.getLookAtPosition()
                 .subtract(cam.getPosition())
                 .normalize()
                 .scalarMultiply(cam.getScreenDistance());
@@ -95,7 +95,7 @@ public class PixelPlane {
                 .subtract(stepRight((((double)imageWidth)/2)-0.5));
     }
 
-    private Vector stepUp(double numOfSteps){
+    private Vector3D stepUp(double numOfSteps){
         if (verticalstep == null){
             double size = cam.getScreenWidth() / imageWidth  ;
             verticalstep = cam.getUpVector()
@@ -105,12 +105,13 @@ public class PixelPlane {
         return verticalstep.scalarMultiply(numOfSteps);
     }
 
-    private Vector stepRight(double numOfSteps){
+    private Vector3D stepRight(double numOfSteps){
         if (horizontalstep == null){
             double size = cam.getScreenWidth() / imageWidth  ;
             horizontalstep = cam.getLookAtPosition()
                     .subtract(cam.getPosition())
                     .crossProduct(cam.getUpVector())
+                    .negate()
                     .normalize()
                     .scalarMultiply(size);
         }
@@ -118,7 +119,7 @@ public class PixelPlane {
     }
 
     public Ray constructRayTroughPixel(int x, int y){
-        Vector pos = getPixelPosition(x,y);
+        Vector3D pos = getPixelPosition(x,y);
         return new Ray(pos, pos.subtract(cam.getPosition()));
     }
 }

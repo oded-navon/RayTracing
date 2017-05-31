@@ -1,22 +1,22 @@
 package RayTracing;
 
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Sphere implements Shape
 {
-    private Vector center;
+    private Vector3D center;
     private float radius;
     private int materialIndex;
 
     public Sphere(float[] center, float radius, int materialIndex)
     {
-        this.center = new Vector(center[0], center[1], center[2]);
+        this.center = new Vector3D(center[0], center[1], center[2]);
         this.radius = radius;
         this.materialIndex = materialIndex;
     }
 
-    public Vector getCenter() {
+    public Vector3D getCenter() {
         return center;
     }
 
@@ -32,11 +32,11 @@ public class Sphere implements Shape
     @Override
     public double IntersectRay(Ray ray)
     {
-        Vector rayDir = ray.getDirection();
-        Vector rayPos = ray.getPoint();
+        Vector3D rayDir = ray.getDirection();
+        Vector3D rayPos = ray.getPoint();
 
         double aCoefficent = rayDir.dotProduct(rayDir);
-        Vector eMinusC = rayPos.subtract(this.center);
+        Vector3D eMinusC = rayPos.subtract(this.center);
         double bCoefficent = 2*rayDir.dotProduct(eMinusC);
         double cCoefficent = eMinusC.dotProduct(eMinusC) - Math.pow(this.getRadius(),2);
 
@@ -57,7 +57,7 @@ public class Sphere implements Shape
     }
 
     @Override
-    public Vector getNormal(Ray ray, double distance) {
+    public Vector3D getNormal(Ray ray, double distance) {
         return ray.getIntersection(distance)
                 .subtract(getCenter())
                 .normalize();
