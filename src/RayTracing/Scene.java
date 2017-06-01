@@ -84,12 +84,23 @@ public class Scene {
         return Math.abs(closest.getDistance() - distance) > 0.1;
     }
 
-    private boolean lightIntersectsWithPoint(Vector3D hitPoint,Vector3D light)
+    private double lightIntersectsWithPoint(Vector3D hitPoint, Vector3D light, double intensity)
     {
-        double distance = light.distance(hitPoint);
+        double distance = light.distance(hitPoint), currentD = 0, res = 1 ;
+
         Ray lightRay = new Ray(light, hitPoint.subtract(light));
-        Intersection closest = rayIntersection(lightRay);
-        return closest.getDistance() + 0.01 > distance;
+        Shape shape;
+        for(int i =0 ; i<shapes.size(); i++){
+            shape = shapes.get(i);
+            currentD =  shape.IntersectRay(lightRay);
+            if ( currentD > 0 && currentD + 0.001 < distance ){
+                if (shape instanceof Sphere)
+                    res *= getMaterial(shape).getTransparency();
+                res *= getMaterial(shape).getTransparency();
+            }
+        }
+        return res == 1 ? res : res + (1 - intensity);
+
     }
 
     private Color getSpecularColor(Shape shape, double distance, Ray inRay, HashMap<Light,Double> shadows){
@@ -105,8 +116,12 @@ public class Scene {
             Vector3D lightDir = light.getPosition()
                     .subtract(inRay.getIntersection(distance))
                     .normalize();
+            if (shapeNormal.dotProduct(lightDir) < 0)
+                continue;
             Vector3D phongRay = shapeNormal.scalarMultiply(lightDir.dotProduct(shapeNormal)*2);
             phongRay = phongRay.subtract(lightDir); // .normalize();
+            phongRay = inRay.getIntersection(distance).subtract(light.getPosition());
+            phongRay = phongRay.add(-2*phongRay.dotProduct(shapeNormal),shapeNormal).normalize();
             double R_V = phongRay.dotProduct(inRay.getDirection().negate().normalize());
             double phongExponent = R_V > 0 ? light.getSpecularIntensity()*Math.pow(R_V, phong_coef) : 0.0;
             Color res = light.getRGB().mult(phongExponent).mult(shadow);
@@ -134,9 +149,9 @@ public class Scene {
         Color finalColor = new Color(0,0,0);
         double shadow;
         for (Light light: lights){
-            if ((shadow = shadows.get(light))<=0.01)
+            if ((shadow = shadows.get(light))<=0.00001)
                 continue;
-            finalColor = finalColor.add(getSingleLightDiffuseColor(shape, inRay, distance, light).mult(shadow));
+            finalColor = finalColor.add(getSingleLightDiffuseColor(shape, inRay, distance, light));//.mult(shadow));
         }
         return finalColor;
     }
@@ -156,24 +171,26 @@ public class Scene {
     }
 
 
-    private double getSoftShadowForLight(Vector3D hitPoint, Light light)
+    private double getSoftShadowForLight(Vector3D hitPointer, Light light)
     {
-        Vector3D lightVectorToHitPoint = hitPoint.subtract(light.getPosition());
+        Vector3D lightVectorToHitPoint = hitPointer.subtract(light.getPosition());
 
         SoftShadows lightPlane = new SoftShadows(light,lightVectorToHitPoint);
 
         List<Vector3D> lightVectors = lightPlane.generateVectors(light,settings);
 
-        double numOfIntersectingLights = (double) lightVectors.stream().filter(lightVector -> lightIntersectsWithPoint(hitPoint,lightVector)).count();
+        double numOfIntersectingLights = lightVectors.stream()
+                .map(lightVector -> lightIntersectsWithPoint(hitPointer,lightVector, light.getShadowIntensity()))
+                .reduce(0.0, (a,b)-> a+b);
 
-        return numOfIntersectingLights/(Math.pow(settings.getShadowRay(),2));
+        return Double.min(1, numOfIntersectingLights/(Math.pow(settings.getShadowRay(),2)));
     }
 
     private Color getTransparencyColor(Shape shape, Ray ray, double distance, int recursion)
     {
+        float transCoeff = getMaterial(shape).getTransparency();
         if(recursion >= settings.getMaxRecursionLevel())
             return settings.getRGB();
-        float transCoeff = getMaterial(shape).getTransparency();
         if (transCoeff <= 0)
             return new Color(0,0,0);
         Ray forward = new Ray(ray.getIntersection(distance*1.01) , ray.getDirection());
