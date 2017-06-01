@@ -1,10 +1,8 @@
 package RayTracing;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+
 
 import static java.lang.Math.round;
 
@@ -27,10 +25,13 @@ public class PixelPlane {
     private Light light;
 
 
-    public PixelPlane(Scene scene){
-        rgb = new float[imageHeight][imageWidth][3];
-        cam = scene.camera;
-        setTopLeft(cam);
+    public PixelPlane(Ray ray, int numOfCells, PixelPlane screen){
+        imageWidth = imageHeight = numOfCells;
+        double superStep = screen.getPixelSize()/numOfCells;
+        rgb = new float[imageWidth][imageHeight][3];
+        Camera camera = new Camera(screen.cam, screen.getPixelSize());
+        cam = camera;
+        setTopLeft(cam, ray.getPoint());
     }
 
 
@@ -102,8 +103,14 @@ public class PixelPlane {
                 .subtract(stepRight((((double)imageWidth)/2)-0.5));
     }
 
+    private void setTopLeft(Camera camera, Vector3D center){
+        topLeft = center.add(stepUp((((double)imageHeight)/2)-0.5))
+                .subtract(stepRight((((double)imageWidth)/2)-0.5));
+    }
 
-    private Vector3D stepUp(double numOfSteps){
+
+
+        private Vector3D stepUp(double numOfSteps){
         if (verticalstep == null){
             double size = cam.getScreenWidth() / imageWidth  ;
             verticalstep = cam.getUpVector()
@@ -111,6 +118,10 @@ public class PixelPlane {
                     .scalarMultiply(size);
         }
         return verticalstep.scalarMultiply(numOfSteps);
+    }
+
+    public double getPixelSize(){
+        return stepUp(1).getNorm();
     }
 
     private Vector3D stepRight(double numOfSteps){
@@ -128,6 +139,20 @@ public class PixelPlane {
 
     public Ray constructRayTroughPixel(int x, int y){
         Vector3D pos = getPixelPosition(x,y);
+        return new Ray(pos, pos.subtract(cam.getPosition()));
+    }
+
+    public Ray constructRandomRayTroughPixel(int x, int y){
+        Vector3D pos = getPixelPosition(x,y);
+        Random randGen = new Random();
+        Vector3D current;
+        // nextDouble returns a number between 0.0 and 1.0
+        double r = randGen.nextDouble();
+        double u = randGen.nextDouble();
+        while (r == 0.0) r = randGen.nextDouble() - 0.5; // between +/-0.5
+        while (u == 0.0) u = randGen.nextDouble() - 0.5;
+        // Go to the cell
+        current = pos.add(stepUp(u)).add(stepRight(r));
         return new Ray(pos, pos.subtract(cam.getPosition()));
     }
 }

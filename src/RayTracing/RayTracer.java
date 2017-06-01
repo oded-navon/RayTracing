@@ -88,6 +88,7 @@ public class RayTracer {
 					System.out.println("got here");
 				}
 				ray = pixelPlane.constructRayTroughPixel(x,y);
+//				rgb = superSample(ray);
 				rgb = scene.computeRGBForRay(ray,0).getRGB();
 				pixelPlane.setPixelColor(x,y,rgb);
 			}
@@ -147,6 +148,16 @@ public class RayTracer {
 
 	public static class RayTracerException extends Exception {
 		public RayTracerException(String msg) {  super(msg); }
+	}
+
+	private float[] superSample(Ray ray){
+		double factor = Math.pow(scene.settings.getSuperSamplingLevel(),-2);
+		Color result = RayTracingUtils.createRandomRays(ray, pixelPlane, scene.settings.getSuperSamplingLevel())
+			   .stream()
+				.map(currentRay -> scene.computeRGBForRay(currentRay,0))
+				.reduce(new Color(0,0,0), (res, zeva) -> res.add(zeva))
+			   .mult(factor);
+		return result.getRGB();
 	}
 
 

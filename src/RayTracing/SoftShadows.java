@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.round;
-
 
 public class SoftShadows
 {
@@ -22,17 +20,21 @@ public class SoftShadows
 
         public SoftShadows(Light lightRay,Vector3D lightVectorToHitPoint){
             light = lightRay;
-            setTopLeft(lightVectorToHitPoint);
             setSteps(lightVectorToHitPoint);
+            setTopLeft(lightVectorToHitPoint);
         }
 
         private void setSteps(Vector3D lightVectorToHitPoint)
         {
-            horizontalstep = lightVectorToHitPoint.crossProduct(light.getPosition()).normalize();
+            Random rnd = new Random();
+            while (horizontalstep == null || horizontalstep.getNorm() == 0 )
+                horizontalstep = lightVectorToHitPoint.crossProduct(new Vector3D(rnd.nextDouble(),rnd.nextDouble(),rnd.nextDouble()));
+            horizontalstep = horizontalstep.normalize();
             verticalstep = lightVectorToHitPoint.crossProduct(horizontalstep).normalize();
         }
-        private void setTopLeft(Vector3D lightVectorToHitPoint){
-            topLeft = lightVectorToHitPoint.add(stepUpLight((((double)light.getLightRadius())/2)-0.5))
+
+        private void setTopLeft(Vector3D lightPoint){
+            topLeft = lightPoint.add(stepUpLight((((double)light.getLightRadius())/2)-0.5))
                     .add(stepLeftLight((((double)light.getLightRadius())/2)-0.5));
         }
 
@@ -54,7 +56,7 @@ public class SoftShadows
         {
             List<Vector3D> result = new ArrayList<>();
             Random randGen = new Random();
-            float sizeOfCell = light.getLightRadius()/settings.getShadowRay();
+            float sizeOfCell = 2*light.getLightRadius()/settings.getShadowRay();
 
             for (int i=0 ; i<settings.getShadowRay() ; i++)
             {
@@ -63,8 +65,8 @@ public class SoftShadows
                     //nextDouble returns a number between 0.0 and 1.0
                     double x = randGen.nextDouble();
                     double y = randGen.nextDouble();
-                    while (x == 0.0) x = randGen.nextDouble();
-                    while (y == 0.0) y = randGen.nextDouble();
+                    while (x == 0.0) x = randGen.nextDouble() - 0.5;
+                    while (y == 0.0) y = randGen.nextDouble() - 0.5;
 
                     // Go to the cell
                     Vector3D currentLight = topLeft.add(stepDownLight(j * sizeOfCell)).add((stepRightLight(i * sizeOfCell)));

@@ -4,11 +4,11 @@ package RayTracing;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Scene
-{
+public class Scene {
     public Camera camera;
     public Settings settings;
     public List<Material> materials;
@@ -39,21 +39,25 @@ public class Scene
             System.out.println("break point");
         }
         Material material = getMaterial(shape);
-        String colorString;
+        HashMap<Light,Double> shadows = getSoftShadowCoefs(ray.getIntersection(closest.getDistance()));
 
-        Color spec = getSpecularColor(shape,closest.getDistance(), ray);
-        colorString = spec.toString();
-        Color diffuse = getDiffuseColor(shape,ray,closest.getDistance());
-        colorString = diffuse.toString();
+        Color spec = getSpecularColor(shape,closest.getDistance(), ray, shadows);
+        Color diffuse = getDiffuseColor(shape,ray,closest.getDistance(),shadows);
         Color transparent = getTransparencyColor(shape,ray,closest.getDistance(),recursion);
-        colorString = transparent.toString();
         Color reflect = getReflectionColor(shape,ray, closest.getDistance(), recursion);
-        colorString = reflect.toString();
         Color outputColor =  spec.add(diffuse).mult(1-material.getTransparency())
                 .add(transparent)
                 .add(reflect);
-        colorString = outputColor.toString();
+
         return outputColor;
+    }
+
+    private HashMap<Light,Double> getSoftShadowCoefs(Vector3D hitPoint){
+        HashMap<Light,Double> shadows = new HashMap<Light,Double>();
+        for (Light light : lights){
+            shadows.put(light, getSoftShadowForLight(hitPoint,light));
+        }
+        return shadows;
     }
 
     // get all the shapes intersecting
@@ -83,18 +87,19 @@ public class Scene
     private boolean lightIntersectsWithPoint(Vector3D hitPoint,Vector3D light)
     {
         double distance = light.distance(hitPoint);
-        Ray lightRay = new Ray(light, light.subtract(hitPoint));
+        Ray lightRay = new Ray(light, hitPoint.subtract(light));
         Intersection closest = rayIntersection(lightRay);
-        return Math.abs(closest.getDistance()- distance) < 0.1;
+        return closest.getDistance() + 0.01 > distance;
     }
 
-    private Color getSpecularColor(Shape shape, double distance, Ray inRay){
+    private Color getSpecularColor(Shape shape, double distance, Ray inRay, HashMap<Light,Double> shadows){
         // let's compute R,
         Color result = new Color(0,0,0);
         Material material = getMaterial(shape);
         double phong_coef = material.getPhongSpecularityCoefficient();
+        double shadow;
         for (Light light: lights){
-            if (pointIsDark(inRay.getIntersection(distance), light))
+            if ((shadow = shadows.get(light))<=0.00001)
                 continue;
             Vector3D shapeNormal = shape.getNormal(inRay, distance);
             Vector3D lightDir = light.getPosition()
@@ -104,7 +109,7 @@ public class Scene
             phongRay = phongRay.subtract(lightDir); // .normalize();
             double R_V = phongRay.dotProduct(inRay.getDirection().negate().normalize());
             double phongExponent = R_V > 0 ? light.getSpecularIntensity()*Math.pow(R_V, phong_coef) : 0.0;
-            Color res = light.getRGB().mult(phongExponent);
+            Color res = light.getRGB().mult(phongExponent).mult(shadow);
             result = result.add(res);
         }
         return result;
@@ -123,14 +128,15 @@ public class Scene
         Color reflection_Color = getMaterial(shape).getReflectionColor();
         return computeRGBForRay(reflection, recursion + 1).mult(reflection_Color);
     }
-    private Color getDiffuseColor(Shape shape, Ray inRay, double distance)
+
+    private Color getDiffuseColor(Shape shape, Ray inRay, double distance,HashMap<Light,Double> shadows )
     {
         Color finalColor = new Color(0,0,0);
-        for (Light light : lights)
-        {
-            if (pointIsDark(inRay.getIntersection(distance), light))
+        double shadow;
+        for (Light light: lights){
+            if ((shadow = shadows.get(light))<=0.01)
                 continue;
-            finalColor = finalColor.add(getSingleLightDiffuseColor(shape, inRay, distance, light));
+            finalColor = finalColor.add(getSingleLightDiffuseColor(shape, inRay, distance, light).mult(shadow));
         }
         return finalColor;
     }
@@ -158,9 +164,9 @@ public class Scene
 
         List<Vector3D> lightVectors = lightPlane.generateVectors(light,settings);
 
-        long numOfIntersectingLights = lightVectors.stream().filter(lightVector -> lightIntersectsWithPoint(hitPoint,lightVector)).count();
+        double numOfIntersectingLights = (double) lightVectors.stream().filter(lightVector -> lightIntersectsWithPoint(hitPoint,lightVector)).count();
 
-        return numOfIntersectingLights/(Math.pow(light.getLightRadius(),2));
+        return numOfIntersectingLights/(Math.pow(settings.getShadowRay(),2));
     }
 
     private Color getTransparencyColor(Shape shape, Ray ray, double distance, int recursion)

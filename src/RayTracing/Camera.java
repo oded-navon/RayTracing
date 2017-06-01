@@ -40,4 +40,13 @@ public class Camera
         ScreenWidth = screenWidth;
     }
 
+    public Camera(Camera cam, double width ) {
+
+        Position = cam.getPosition();
+        LookAtPosition = cam.getLookAtPosition();
+        UpVector = cam.getUpVector();
+        ScreenDistance = cam.getScreenDistance();
+        ScreenWidth = (float) width;
+    }
+
 }

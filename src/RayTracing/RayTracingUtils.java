@@ -3,11 +3,28 @@ package RayTracing;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Oded_navon on 11/05/2017.
  */
 public class RayTracingUtils {
+
+    public static List<Ray> createRandomRays(Ray ray, PixelPlane screen, int numOfCells){
+        List<Ray> result = new ArrayList<>();
+        if (numOfCells == 1){
+            result.add(ray);
+            return result;
+        }
+        PixelPlane superScreen = new PixelPlane(ray, numOfCells, screen);
+        for (int i=0 ; i<numOfCells ; i++) {
+            for (int j = 0; j < numOfCells; j++) {
+                result.add(superScreen.constructRandomRayTroughPixel(i,j));
+            }
+        }
+        return result;
+    }
 
     /**
      * Parses the scene file and creates the scene. Change this function so it generates the required objects.
