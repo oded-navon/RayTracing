@@ -23,13 +23,13 @@ public class Plane implements Shape
 
     public Plane(float[] normal, double offset, int materialIndex) {
         this.normal = new Vector3D(normal[0], normal[1], normal[2]);
-        this.offset = offset;
+        this.offset = 0-offset;
         this.materialIndex = materialIndex;
     }
 
     public Plane(Vector3D normal, double offset, int materialIndex) {
         this.normal = normal;
-        this.offset = offset;
+        this.offset = 0-offset;
         this.materialIndex = materialIndex;
     }
 

@@ -35,11 +35,24 @@ public class Scene
 
         // now we have a valid intersection and we should compute lighting
         Shape shape = shapes.get(closest.getShapeIdx()); // this convertion might cause problems
+        if (shape instanceof Sphere) {
+            System.out.println("break point");
+        }
         Material material = getMaterial(shape);
-        Color outputColor =  getSpecularColor(shape,closest.getDistance(), ray).add(getDiffuseColor(shape,ray,closest.getDistance())).mult(1-material.getTransparency()
-                ).add(getTransparencyColor(shape,ray,closest.getDistance(),recursion)
-                ).add(getReflectionColor(shape,ray, closest.getDistance(), recursion)
-                );
+        String colorString;
+
+        Color spec = getSpecularColor(shape,closest.getDistance(), ray);
+        colorString = spec.toString();
+        Color diffuse = getDiffuseColor(shape,ray,closest.getDistance());
+        colorString = diffuse.toString();
+        Color transparent = getTransparencyColor(shape,ray,closest.getDistance(),recursion);
+        colorString = transparent.toString();
+        Color reflect = getReflectionColor(shape,ray, closest.getDistance(), recursion);
+        colorString = reflect.toString();
+        Color outputColor =  spec.add(diffuse).mult(1-material.getTransparency())
+                .add(transparent)
+                .add(reflect);
+        colorString = outputColor.toString();
         return outputColor;
     }
 
@@ -62,9 +75,9 @@ public class Scene
 
     private boolean pointIsDark(Vector3D hitPoint, Light light){
         double distance = light.getPosition().distance(hitPoint);
-        Ray lightRay = new Ray(light.getPosition(), light.getPosition().subtract(hitPoint));
+        Ray lightRay = new Ray(light.getPosition(), hitPoint.subtract(light.getPosition()));
         Intersection closest = rayIntersection(lightRay);
-        return Math.abs(closest.getDistance()- distance) > 0.1;
+        return Math.abs(closest.getDistance() - distance) > 0.1;
     }
 
     private boolean lightIntersectsWithPoint(Vector3D hitPoint,Vector3D light)
@@ -87,10 +100,12 @@ public class Scene
             Vector3D lightDir = light.getPosition()
                     .subtract(inRay.getIntersection(distance))
                     .normalize();
-            Vector3D phongRay = shapeNormal.scalarMultiply(lightDir.dotProduct(shapeNormal)*2).subtract(lightDir).normalize();
+            Vector3D phongRay = shapeNormal.scalarMultiply(lightDir.dotProduct(shapeNormal)*2);
+            phongRay = phongRay.subtract(lightDir); // .normalize();
             double R_V = phongRay.dotProduct(inRay.getDirection().negate().normalize());
             double phongExponent = R_V > 0 ? light.getSpecularIntensity()*Math.pow(R_V, phong_coef) : 0.0;
-            result = result.add(light.getRGB().mult(phongExponent));
+            Color res = light.getRGB().mult(phongExponent);
+            result = result.add(res);
         }
         return result;
     }
@@ -108,10 +123,9 @@ public class Scene
         Color reflection_Color = getMaterial(shape).getReflectionColor();
         return computeRGBForRay(reflection, recursion + 1).mult(reflection_Color);
     }
-
     private Color getDiffuseColor(Shape shape, Ray inRay, double distance)
     {
-        Color finalColor = new Color(new float[] {0,0,0});
+        Color finalColor = new Color(0,0,0);
         for (Light light : lights)
         {
             if (pointIsDark(inRay.getIntersection(distance), light))
@@ -128,7 +142,8 @@ public class Scene
         Vector3D normalizedReturningLightVectorL = light.getPosition().subtract(hit).normalize();
         Vector3D shapeNormal = shape.getNormal(inRay, distance);
         double nDotL = shapeNormal.dotProduct(normalizedReturningLightVectorL);
-
+        if (nDotL < 0)
+            return new Color(0,0,0);
         Color shapeMaterialDiffuseColor = new Color(getMaterial(shape).getDiffuseColor());
 
         return  shapeMaterialDiffuseColor.mult(nDotL).mult(light.getRGB());
@@ -159,10 +174,6 @@ public class Scene
         Color res = computeRGBForRay(forward, recursion+1);
         return res.mult(transCoeff);
     }
-
-
-
-//    private Color getReflectionColor();
 
     class Intersection{
         private int shapeIdx = -1;

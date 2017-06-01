@@ -47,4 +47,9 @@ public class Color extends Vector3D {
     public Color add(Color other){
         return getAsColor(super.add(other));
     }
+
+
+    public String toString(){
+        return this.scalarMultiply(255).toString();
+    }
 }
