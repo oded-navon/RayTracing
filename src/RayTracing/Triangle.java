@@ -51,19 +51,19 @@ public class Triangle implements Shape
         Vector3D vec2 = vertex2.subtract(ray.getPoint());
         Vector3D vec3 = vertex3.subtract(ray.getPoint());
         //first side
-        Vector3D norm1 = vec1.crossProduct(vec2).normalize();
+        Vector3D norm1 = vec1.crossProduct(vec2).negate().normalize();
         if (ray.getDirection().dotProduct(norm1)<0)
         {
             return -1;
         }
         //second side
-        Vector3D norm2 = vec2.crossProduct(vec3).normalize();
+        Vector3D norm2 = vec2.crossProduct(vec3).negate().normalize();
         if (ray.getDirection().dotProduct(norm2)<0)
         {
             return -1;
         }
         //third side
-        Vector3D norm3 = vec3.crossProduct(vec1).normalize();
+        Vector3D norm3 = vec3.crossProduct(vec1).negate().normalize();
         if (ray.getDirection().dotProduct(norm3)<0)
         {
             return -1;
