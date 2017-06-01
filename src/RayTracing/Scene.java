@@ -124,7 +124,7 @@ public class Scene {
             phongRay = phongRay.add(-2*phongRay.dotProduct(shapeNormal),shapeNormal).normalize();
             double R_V = phongRay.dotProduct(inRay.getDirection().negate().normalize());
             double phongExponent = R_V > 0 ? light.getSpecularIntensity()*Math.pow(R_V, phong_coef) : 0.0;
-            Color res = light.getRGB().mult(phongExponent).mult(shadow);
+            Color res = light.getRGB().mult(material.getSpecularColor()).mult(phongExponent).mult(shadow);
             result = result.add(res);
         }
         return result;

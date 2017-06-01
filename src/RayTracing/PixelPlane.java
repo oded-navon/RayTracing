@@ -109,11 +109,13 @@ public class PixelPlane {
     }
 
 
-
-        private Vector3D stepUp(double numOfSteps){
+    private Vector3D stepUp(double numOfSteps){
         if (verticalstep == null){
-            double size = cam.getScreenWidth() / imageWidth  ;
-            verticalstep = cam.getUpVector()
+            stepRight( 1);
+            double size = cam.getScreenWidth() / imageWidth;
+            verticalstep = cam.getLookAtPosition()
+                    .subtract(cam.getPosition())
+                    .crossProduct(horizontalstep)
                     .normalize()
                     .scalarMultiply(size);
         }
