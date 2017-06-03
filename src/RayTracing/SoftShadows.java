@@ -21,7 +21,7 @@ public class SoftShadows
         public SoftShadows(Light lightRay,Vector3D lightVectorToHitPoint){
             light = lightRay;
             setSteps(lightVectorToHitPoint);
-            setTopLeft(lightVectorToHitPoint);
+            setTopLeft(light.getPosition());
         }
 
         private void setSteps(Vector3D lightVectorToHitPoint)
