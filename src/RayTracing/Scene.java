@@ -41,7 +41,7 @@ public class Scene {
         Material material = getMaterial(shape);
         HashMap<Light,Double> shadows = getSoftShadowCoefs(ray.getIntersection(closest.getDistance()));
         if (shape instanceof Plane) {
-            System.out.println(shadows.toString());
+//            System.out.println(shadows.toString());
         }
 
         Color spec = getSpecularColor(shape,closest.getDistance(), ray, shadows);
