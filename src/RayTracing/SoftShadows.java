@@ -26,7 +26,6 @@ public class SoftShadows
 
         private void setSteps(Vector3D lightVectorToHitPoint)
         {
-            Random rnd = new Random();
             horizontalstep = lightVectorToHitPoint.orthogonal();
             horizontalstep = horizontalstep.normalize();
             verticalstep = lightVectorToHitPoint.crossProduct(horizontalstep).normalize();

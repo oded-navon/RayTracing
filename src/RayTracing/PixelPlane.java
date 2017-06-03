@@ -7,9 +7,7 @@ import java.util.Random;
 import static java.lang.Math.round;
 
 
-/**
- * Created by orrbarkat on 27/05/2017.
- */
+
 public class PixelPlane {
     public static final byte RED = 0;
     public static final byte GREEN = 1;

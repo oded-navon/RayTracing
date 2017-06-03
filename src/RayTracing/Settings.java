@@ -3,14 +3,14 @@ package RayTracing;
 
 public class Settings
 {
-    private Color RGB;
+    private Color BackgroundColor;
     private int ShadowRay;
     private int MaxRecursionLevel;
     private int SuperSamplingLevel;
 
 
-    public Color getRGB() {
-        return RGB;
+    public Color getBackgroundColor() {
+        return BackgroundColor;
     }
 
     public int getShadowRay() {
@@ -25,9 +25,9 @@ public class Settings
         return SuperSamplingLevel;
     }
 
-    public Settings(float[] RGB, int shadowRay, int maxRecursionLevel, int superSamplingLevel) {
+    public Settings(float[] BackgroundColor, int shadowRay, int maxRecursionLevel, int superSamplingLevel) {
 
-        this.RGB = new Color(RGB[0], RGB[1],RGB[2]);
+        this.BackgroundColor = new Color(BackgroundColor[0], BackgroundColor[1], BackgroundColor[2]);
         ShadowRay = shadowRay;
         MaxRecursionLevel = maxRecursionLevel;
         SuperSamplingLevel = superSamplingLevel;

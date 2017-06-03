@@ -84,7 +84,7 @@ public class RayTracer {
 		for(int x=0; x<pixelPlane.getImageWidth(); x++){
 			for(int y=0; y<pixelPlane.getImageHeight(); y++){
 				System.out.println("x: "+x+" Y: "+y);
-				if(x==280 && y==150){
+				if(x==40 && y==50){
 					System.out.println("got here");
 				}
 				ray = pixelPlane.constructRayTroughPixel(x,y);

@@ -36,7 +36,7 @@ public class Plane implements Shape
     @Override
     public double IntersectRay(Ray ray)
     {
-        //check if the ray and plane ar parallel
+        //check if the ray and plane are parallel
         if (ray.getDirection().crossProduct(this.getNormal()).getNorm()<=0.0001)
         {
             return Double.MAX_VALUE;
@@ -47,6 +47,7 @@ public class Plane implements Shape
         double res = numerator/denominator;
         return res > 0 ? res : Double.MAX_VALUE;
     }
+
 
     @Override
     public Vector3D getNormal(Ray ray, double distance) {
