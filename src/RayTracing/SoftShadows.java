@@ -53,25 +53,29 @@ public class SoftShadows
         public List<Vector3D> generateVectors(Light light, Settings settings)
         {
             List<Vector3D> result = new ArrayList<>();
-            Random randGen = new Random();
-            float sizeOfCell = 2*light.getLightRadius()/settings.getShadowRay();
 
-            for (int i=0 ; i<settings.getShadowRay() ; i++)
-            {
-                for (int j = 0; j < settings.getShadowRay(); j++)
-                {
-                    //nextDouble returns a number between 0.0 and 1.0
-                    double x = randGen.nextDouble();
-                    double y = randGen.nextDouble();
-                    while (x == 0.0) x = randGen.nextDouble() - 0.5;
-                    while (y == 0.0) y = randGen.nextDouble() - 0.5;
+            if (light.getLightRadius() == 0 || settings.getShadowRay() == 1){
+                result.add(light.getPosition());
+            }else {
 
-                    // Go to the cell
-                    Vector3D currentLight = topLeft.add(stepDownLight(j * sizeOfCell)).add((stepRightLight(i * sizeOfCell)));
-                    // move to random point in it
-                    currentLight = currentLight.add(stepDownLight(x * sizeOfCell)).add((stepRightLight(y * sizeOfCell)));
-                    //add to result
-                    result.add(currentLight);
+                Random randGen = new Random();
+                float sizeOfCell = 2 * light.getLightRadius() / settings.getShadowRay();
+
+                for (int i = 0; i < settings.getShadowRay(); i++) {
+                    for (int j = 0; j < settings.getShadowRay(); j++) {
+                        //nextDouble returns a number between 0.0 and 1.0
+                        double x = randGen.nextDouble();
+                        double y = randGen.nextDouble();
+                        while (x == 0.0) x = randGen.nextDouble() - 0.5;
+                        while (y == 0.0) y = randGen.nextDouble() - 0.5;
+
+                        // Go to the cell
+                        Vector3D currentLight = topLeft.add(stepDownLight(j * sizeOfCell)).add((stepRightLight(i * sizeOfCell)));
+                        // move to random point in it
+                        currentLight = currentLight.add(stepDownLight(x * sizeOfCell)).add((stepRightLight(y * sizeOfCell)));
+                        //add to result
+                        result.add(currentLight);
+                    }
                 }
             }
             return result;
