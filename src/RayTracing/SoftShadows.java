@@ -29,11 +29,12 @@ public class SoftShadows
             horizontalstep = lightVectorToHitPoint.orthogonal();
             horizontalstep = horizontalstep.normalize();
             verticalstep = lightVectorToHitPoint.crossProduct(horizontalstep).normalize();
+            horizontalstep = lightVectorToHitPoint.crossProduct(verticalstep).normalize();
         }
 
         private void setTopLeft(Vector3D lightPoint){
-            topLeft = lightPoint.add(stepUpLight((((double)light.getLightRadius())/2)-0.5))
-                    .add(stepLeftLight((((double)light.getLightRadius())/2)-0.5));
+            topLeft = lightPoint.add(stepUpLight((double)light.getLightRadius()))
+                    .add(stepLeftLight((double)light.getLightRadius()));
         }
 
         private Vector3D stepUpLight(double numOfSteps){
@@ -59,7 +60,7 @@ public class SoftShadows
             }else {
 
                 Random randGen = new Random();
-                float sizeOfCell = 2 * light.getLightRadius() / settings.getShadowRay();
+                float sizeOfCell = light.getLightRadius() / settings.getShadowRay();
 
                 for (int i = 0; i < settings.getShadowRay(); i++) {
                     for (int j = 0; j < settings.getShadowRay(); j++) {
