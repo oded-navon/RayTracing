@@ -83,13 +83,13 @@ public class RayTracer {
 
 		for(int x=0; x<pixelPlane.getImageWidth(); x++){
 			for(int y=0; y<pixelPlane.getImageHeight(); y++){
-				System.out.println("x: "+x+" Y: "+y);
+				//System.out.println("x: "+x+" Y: "+y);
 				if(y==499){
-					System.out.println("got here");
+					//System.out.println("got here");
 				}
 				ray = pixelPlane.constructRayTroughPixel(x,y);
-				rgb = superSample(ray);
-//				rgb = scene.computeRGBForRay(ray,0).getRGB();
+				//rgb = superSample(ray);
+				rgb = scene.computeRGBForRay(ray,0).getRGB();
 				pixelPlane.setPixelColor(x,y,rgb);
 			}
 		}
