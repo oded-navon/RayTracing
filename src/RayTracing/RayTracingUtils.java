@@ -34,7 +34,7 @@ public class RayTracingUtils {
         FileReader fr = new FileReader(sceneFileName);
 
         BufferedReader r = new BufferedReader(fr);
-        String line = null;
+        String line;
         int lineNum = 0;
         System.out.println("Started parsing scene file " + sceneFileName);
 
