@@ -9,7 +9,7 @@ public class Settings
     private int SuperSamplingLevel;
 
 
-    public Color getBackgroundColor() {
+    public Color getRGB() {
         return BackgroundColor;
     }
 

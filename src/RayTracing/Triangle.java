@@ -17,9 +17,13 @@ public class Triangle implements Shape
         this.vertex2 = new Vector3D(vertex2[0],vertex2[1],vertex2[2]);
         this.vertex3 = new Vector3D(vertex3[0],vertex3[1],vertex3[2]);
         this.materialIndex = materialIndex;
-        Vector3D normal = this.getNormal(null,0);
 
-        this.trianglePlane = new Plane(normal,normal.dotProduct(this.getVertex1()),this.getMaterialIndex());
+        Vector3D v1 = this.vertex1.subtract(this.vertex2);
+        Vector3D normal = this.vertex3.subtract(this.vertex2)
+                .crossProduct(v1)
+                .normalize();
+
+        this.trianglePlane = new Plane(normal,normal.dotProduct(this.vertex1),this.materialIndex);
     }
 
     public Vector3D getVertex1() {
@@ -44,7 +48,7 @@ public class Triangle implements Shape
         double planeInter = this.trianglePlane.IntersectRay(ray);
         if (planeInter==Double.MAX_VALUE || planeInter<0)
         {
-            return -1;
+            return Double.MAX_VALUE;
         }
         //check that the intersection is inside the triangle
         Vector3D vec1 = vertex1.subtract(ray.getPoint());
@@ -54,30 +58,28 @@ public class Triangle implements Shape
         Vector3D norm1 = vec1.crossProduct(vec2).negate().normalize();
         if (ray.getDirection().dotProduct(norm1)<0)
         {
-            return -1;
+            return Double.MAX_VALUE;
         }
         //second side
         Vector3D norm2 = vec2.crossProduct(vec3).negate().normalize();
         if (ray.getDirection().dotProduct(norm2)<0)
         {
-            return -1;
+            return Double.MAX_VALUE;
         }
         //third side
         Vector3D norm3 = vec3.crossProduct(vec1).negate().normalize();
         if (ray.getDirection().dotProduct(norm3)<0)
         {
-            return -1;
+            return Double.MAX_VALUE;
         }
         return planeInter;
     }
 
     @Override
-    public Vector3D getNormal(Ray ray, double distance) {
-        Vector3D v1 = getVertex1().subtract(getVertex2());
-        Vector3D n =  getVertex3().subtract(getVertex2())
-                .crossProduct(v1)
-                .negate()
-                .normalize();
+    public Vector3D getNormal(Ray ray, double distance)
+    {
+        return this.trianglePlane.getNormal(ray,distance);
+
 
     }
 }
