@@ -74,9 +74,10 @@ public class Triangle implements Shape
     @Override
     public Vector3D getNormal(Ray ray, double distance) {
         Vector3D v1 = getVertex1().subtract(getVertex2());
-        return getVertex3().subtract(getVertex2())
+        Vector3D n =  getVertex3().subtract(getVertex2())
                 .crossProduct(v1)
                 .negate()
                 .normalize();
+
     }
 }
